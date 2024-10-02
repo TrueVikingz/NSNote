@@ -1,17 +1,29 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const db = require('./db');  // Ensure this is the correct path
+const path = require('path'); // Import path for serving static files
 
 const app = express();
 app.use(bodyParser.json());
 
-// Root route
+// Serve static files from the CSS directory
+app.use('/CSS', express.static(path.join(__dirname, 'CSS'))); // Serve static files from the 'CSS' directory
+
+// Serve HTML pages
 app.get('/', (req, res) => {
-    res.send('Welcome to the Notes API!');
+    res.sendFile(path.join(__dirname,'\NSNote', 'Main.html')); // Serve Main.html at the root
 });
 
-// Get all notes
-app.get('/notes', (req, res) => {
+app.get('/new', (req, res) => {
+    res.sendFile(path.join(__dirname,'\NSNote', 'NewNote.html')); // Serve NewNote.html
+});
+
+app.get('/list', (req, res) => {
+    res.sendFile(path.join(__dirname,'\NSNote', 'List.html')); // Serve List.html
+});
+
+// API endpoint to get all notes in JSON format
+app.get('/api/notes', (req, res) => {
     db.all('SELECT * FROM notes', [], (err, rows) => {
         if (err) {
             res.status(500).json({ error: err.message });
@@ -21,22 +33,8 @@ app.get('/notes', (req, res) => {
     });
 });
 
-// Get a specific note by ID
-app.get('/notes/:id', (req, res) => {
-    const { id } = req.params;
-    db.get('SELECT * FROM notes WHERE id = ?', [id], (err, row) => {
-        if (err) {
-            res.status(500).json({ error: err.message });
-        } else if (row) {
-            res.json(row);
-        } else {
-            res.status(404).json({ error: 'Note not found' });
-        }
-    });
-});
-
 // Add a new note
-app.post('/notes', (req, res) => {
+app.post('/api/notes', (req, res) => {
     const { writer, visible_to, content } = req.body; // Ensure these fields are sent in the request
     if (!writer || !visible_to || !content) {
         return res.status(400).json({ error: 'Writer, visible_to, and content are required' });
@@ -59,7 +57,6 @@ app.post('/notes', (req, res) => {
         }
     );
 });
-
 
 // Start the server
 const port = 3000;

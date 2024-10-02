@@ -3,17 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="CSS/CSS.css">
-    <title>NS Note</title>
+    <link rel="stylesheet" href="CSS/CSS.css"> <!-- Adjust path if necessary -->
+    <title>List of Notes</title>
 </head>
 <body>
-    <Div>
-        <H1>List of notes</H1>
-    </Div>
-    <div class="NavBar">
-        <a href="Main.HTML">Home</a>
-        <a href="List.HTML">Old Notes</a>
-        <a href="NewNote.HTML">Make new note</a>
+    <div>
+        <h1>List of Notes</h1>
     </div>
+    <div class="NavBar">
+        <a href="/">Home</a>
+        <a href="/List">Old Notes</a>
+        <a href="/NewNote">Make new note</a>
+    </div>
+
+    <div id="notesContainer">
+        <h2>All Notes</h2>
+        <ul id="notesList"></ul> <!-- This will hold the list of notes -->
+    </div>
+
+    <script>
+        // Function to fetch notes from the API
+        async function fetchNotes() {
+            try {
+                const response = await fetch('/api/notes'); // Use relative path for the API
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                const notes = await response.json(); // Parse the JSON response
+
+                const notesList = document.getElementById('notesList');
+                notesList.innerHTML = ''; // Clear any existing content
+
+                // Loop through the notes and create list items
+                notes.forEach(note => {
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `
+                        <strong>Writer:</strong> ${note.writer} <br>
+                        <strong>Viewers:</strong> ${note.visible_to} <br>
+                        <strong>Content:</strong> ${note.content} <br>
+                        <strong>ID:</strong> ${note.id} <br>
+                        <hr>
+                    `;
+                    notesList.appendChild(listItem); // Append the new list item to the notes list
+                });
+            } catch (error) {
+                console.error('Error fetching notes:', error);
+            }
+        }
+
+        // Fetch the notes when the page loads
+        window.onload = fetchNotes;
+    </script>
 </body>
 </html>
