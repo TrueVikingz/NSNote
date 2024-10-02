@@ -4,17 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="CSS/CSS.css">
+    <link rel="shortcut icon" href="IMG/favicon-32x32.png" type="image/x-icon">
     <title>NS Note</title>
 </head>
 <body>
-    <Div>
-        <H1>New Note</H1>
-    </Div>
-    <div class="NavBar">
-        <a href="Main.HTML">Home</a>
-        <a href="List.HTML">Old Notes</a>
-        <a href="NewNote.HTML">Make new note</a>
-    </div>
+    <header><h1>New Note</h1></header>
+    <Section>
+        <nav>
+            <ul>
+                <li><a href="Main.HTML">Home</a></li><br>
+                <li><a href="List.HTML">Old Notes</a></li><br>
+                <li><a href="NewNote.HTML" class="active">Make new note</a></li>
+            </ul>
+        </nav>
+    </Section>
     <Div>
         <Form>
             <label for="Nname">Note Name</label><br>
@@ -24,5 +27,6 @@
             <input type="submit">
         </Form>
     </Div>
+    <footer>Footer</footer>
 </body>
 </html>
